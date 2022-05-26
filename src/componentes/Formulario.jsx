@@ -1,13 +1,42 @@
 import React, {useState} from "react";
 import styled from 'styled-components';
+import db from "./../firebase/firebaseConfig.js";
+import { collection, addDoc } from "firebase/firestore";
 
 
 const Formulario = () => {
     const [nombre, cambiarNombre] = useState('');
     const [correo, cambiarCorreo] = useState('');
 
+    //es una función asíncrona ya que hacemos 
+    //una llamada AJAX dentro de addDoc
+    const onSubmit = async e => {
+        e.preventDefault();
+
+        try {
+            //primer parámetro me "abre" la coleccion usuarios 
+            //de nuestra db.
+            //segundo parámetro le pasamos el nuevo codumento
+            await addDoc(collection(db, 'usuarios'), {
+                nombre: nombre,
+                correo: correo,
+            });
+        }
+        catch (error) {
+            console.error("ha habido un error: " + error);      
+                
+        }
+        
+
+        //limpiamos el contenido de los input
+        cambiarCorreo('');
+        cambiarNombre('');
+
+
+    }
+
     return (  
-        <form action="">
+        <form action="" onSubmit={onSubmit}>
             <Input
                 type="text"
                 name="nombre"

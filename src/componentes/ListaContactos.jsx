@@ -1,14 +1,34 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import styled from 'styled-components';
 import db from "../firebase/firebaseConfig.js";
-import Contacto from "./Contacto.jsx";
+import { collection, onSnapshot } from 'firebase/firestore';
+import Contacto from "./Contacto";
 
 //sfc    snippet
 const ListaContactos = () => {
-    const [contactos, cambiarContactos] = useState([
-        { id:1, nombre: 'Carlos', correo: 'correo@movidas.com'},
-        { id:2, nombre: 'Manolo', correo: 'correo2@movidas.com'},
-    ])
+    
+    const [contactos, cambiarContactos] = useState([]);
+
+    useEffect(() => {
+        //mantiene una conexión abierta con firebase, y cuando hay cambios
+        //ejecuta la función que le pasamos como segundo parámetro
+        onSnapshot(
+            collection(db, 'usuarios'),
+            (snapshot) => {
+                console.log('se ejecuta snapShot porque hay un cambio en la base de datos');
+                console.log(snapshot.docs);
+                //mapeamos en un nuevo array lo que nos devuelve el snapshot
+                const arrayUsers = snapshot.docs.map((doc) => {
+                    return { ...doc.data(), id: doc.id };
+                })
+                console.log(arrayUsers);
+                cambiarContactos(arrayUsers);
+            },
+            (error) => {
+                console.log(error);
+            }
+        )
+    }, []);
 
     return (  
         

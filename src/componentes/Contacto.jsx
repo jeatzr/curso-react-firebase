@@ -3,8 +3,9 @@ import styled from 'styled-components';
 import db from "./../firebase/firebaseConfig.js";
 
 const Contacto = ({ id, nombre, correo }) => {
+    
     const [editandoTarea, setEditandoTarea] = useState(false);
-    console.log(typeof(correo));
+
     return (  
         <ContenedorContacto>
             {editandoTarea ?

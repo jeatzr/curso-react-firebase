@@ -1,27 +1,46 @@
 import React, {useState} from "react";
 import styled from 'styled-components';
 import db from "./../firebase/firebaseConfig.js";
+import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
 
 const Contacto = ({ id, nombre, correo }) => {
     
     const [editandoTarea, setEditandoTarea] = useState(false);
+    const [nuevoNombre, setNuevoNombre] = useState(nombre);
+    const [nuevoCorreo, setNuevoCorreo] = useState(correo);
+
+
+    const updateContacto = async (e) => {
+        e.preventDefault();
+        
+        try {
+            await updateDoc(doc(db, 'usuarios', id),{
+                nombre: nuevoNombre,
+                correo: nuevoCorreo,
+            });    
+        } catch (e) {
+            console.error("hubo un error: " + e);
+        }
+        
+        setEditandoTarea(false);
+    } 
 
     return (  
         <ContenedorContacto>
             {editandoTarea ?
-                <form action="">
+                <form action="" onSubmit={updateContacto}>
                     <Input
                         type="text"
                         name="nombre"
-                        //value={ }
-                        //onChange={}
+                        value={nuevoNombre}
+                        onChange={(e)=> setNuevoNombre(e.target.value)}
                         placeholder="Nombre"
                     />
                     <Input
                         type="text"
                         name="correo"
-                        //value={ }
-                        //onChange={}
+                        value={nuevoCorreo}
+                        onChange={(e)=> setNuevoCorreo(e.target.value)}
                         placeholder="Correo"
                     />
                     <Boton type="submit">Actualizar</Boton>
@@ -40,7 +59,7 @@ const Contacto = ({ id, nombre, correo }) => {
 
 const ContenedorContacto = styled.div`
     padding: 10px 0;
-    border-bottom: 1px solid rgba(0,0,0,.0);
+    border-bottom: 2px solid rgba(0,0,0,.1);
 `;
 
 const Nombre = styled.p`

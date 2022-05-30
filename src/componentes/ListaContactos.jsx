@@ -1,21 +1,28 @@
 import React, {useState} from "react";
 import styled from 'styled-components';
 import db from "../firebase/firebaseConfig.js";
-import { collection, addDoc } from "firebase/firestore";
+import Contacto from "./Contacto.jsx";
 
 //sfc    snippet
 const ListaContactos = () => {
     const [contactos, cambiarContactos] = useState([
-        { id:2, nombre: 'Carlos', correo: 'correo@movidas.com'}
+        { id:1, nombre: 'Carlos', correo: 'correo@movidas.com'},
+        { id:2, nombre: 'Manolo', correo: 'correo2@movidas.com'},
     ])
 
     return (  
         
+        //esto pregunta si hay contactos para mostrar el contenedor de contactos
         contactos.length &&
         <ContenedorContactos>
-            {contactos.map((c) => {
-                return <p key={c.id}>{c.nombre} - {c.correo}</p>
-            })}
+                {contactos.map((c) =>
+                    <Contacto
+                        key={c.id}
+                        id={c.id}
+                        nombre={c.nombre}
+                        correo={c.correo}
+                    />
+                )}
         </ContenedorContactos>
     );
 }

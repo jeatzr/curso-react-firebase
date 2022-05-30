@@ -25,6 +25,16 @@ const Contacto = ({ id, nombre, correo }) => {
         setEditandoTarea(false);
     } 
 
+    const deleteContacto = async (id) => {
+    
+        try {
+            await deleteDoc(doc(db, 'usuarios', id));    
+        } catch (e) {
+            console.error("hubo un error elimninando usuario: " + e);
+        }
+        
+    } 
+
     return (  
         <ContenedorContacto>
             {editandoTarea ?
@@ -49,7 +59,7 @@ const Contacto = ({ id, nombre, correo }) => {
                 <>
                     <Nombre>{nombre}</Nombre>
                     <Correo>{correo}</Correo>
-                    <Boton>Eliminar</Boton>
+                    <Boton onClick={() => deleteContacto(id)}>Eliminar</Boton>
                     <Boton onClick={()=> setEditandoTarea(!editandoTarea)}>Editar</Boton>
                 </>     
             }
